@@ -1,16 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Edit Task</title>
-</head>
-<body>
-    <h1>Edit Task</h1>
-    <form method="post">
-        {% csrf_token %}
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="my-4">Add Task</h1>
+<form method="post">
+    {% csrf_token %}
+    <div class="form-group">
         {{ form.as_p }}
-        <button type="submit">Save</button>
-    </form>
-    <a href="{% url 'task_list' %}">Back to Task List</a>
-</body>
-</html>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+<a href="{% url 'task_list' %}" class="btn btn-secondary mt-3">Back to Task List</a>
+{% endblock %}

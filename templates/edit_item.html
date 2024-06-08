@@ -1,18 +1,13 @@
-{% extends 'ToDoList_app/base.html' %}
-{% load crispy_forms_tags %}
+{% extends 'base.html' %}
 
-
-{% block content_block %}
-
-
-   <form  method="POST" >
-
-       {% csrf_token %}
-
-        {{ edit_form|crispy }}
-
-      <button type="submit" class="btn btn-success" > Update </button>
+{% block content %}
+<h1 class="my-4">Edit Task</h1>
+<form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        {{ form.as_p }}
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
 </form>
-
-
+<a href="{% url 'task_list' %}" class="btn btn-secondary mt-3">Back to Task List</a>
 {% endblock %}

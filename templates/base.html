@@ -2,11 +2,72 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}My Site{% endblock %}</title>
+    <title>{% block title %}To-Do List{% endblock %}</title>
+    {% load static %}
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
 </head>
 <body>
-    <div class="container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="{% url 'home' %}">To-Do List</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ml-auto">
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: none;">
+                        {% csrf_token %}
+                    </form>
+                    <a class="nav-link" href="#" onclick="document.getElementById('logout-form').submit();">Logout</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'signup' %}">Sign Up</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    <div class="container mt-5">
         {% block content %}{% endblock %}
     </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const checkboxes = document.querySelectorAll('.task-checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function () {
+                    const taskId = this.dataset.taskId;
+                    const completed = this.checked;
+                    $.ajax({
+                        url: "{% url 'update_task_status' %}",
+                        method: "POST",
+                        data: {
+                            task_id: taskId,
+                            completed: completed,
+                            csrfmiddlewaretoken: '{{ csrf_token }}'
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                const taskCard = document.getElementById(`task-${taskId}`);
+                                const taskTitle = document.getElementById(`title-${taskId}`);
+                                const taskDesc = document.getElementById(`desc-${taskId}`);
+                                if (completed) {
+                                    taskTitle.classList.add('completed');
+                                    taskDesc.classList.add('completed');
+                                    document.getElementById('completed-tasks').appendChild(taskCard);
+                                } else {
+                                    taskTitle.classList.remove('completed');
+                                    taskDesc.classList.remove('completed');
+                                    document.getElementById('uncompleted-tasks').appendChild(taskCard);
+                                }
+                            } else {
+                                console.error(response.error);
+                            }
+                        }
+                    });
+                });
+            });
+        });
+    </script>
 </body>
 </html>

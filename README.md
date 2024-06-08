@@ -61,19 +61,3 @@ Follow these steps to set up and run your Django project locally.
    ```sh
    python manage.py runserver
    ```
-
-### Summary
-
-1. Create and activate a virtual environment.
-2. Install Django.
-3. Navigate to your project directory.
-4. Run the development server.
-
-## Contributing
-
-If you would like to contribute, please fork the repository and use a feature branch. Pull requests are warmly welcome.
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-```

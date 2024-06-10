@@ -1,7 +1,7 @@
 from django import forms
-from .models import Task
+from .modelsAPI import TaskAPI
 
 class TaskForm(forms.ModelForm):
     class Meta:
-        model = Task
+        model = TaskAPI
         fields = ['title', 'description', 'completed']

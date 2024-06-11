@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 
+from todo.models import Task
+
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
 
@@ -16,3 +18,11 @@ class UserSerializer(serializers.ModelSerializer):
         )
         return user
     
+
+class TaskSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+    
+    class Meta:
+        model = Task
+        depth= 1
+        fields = ('__all__')

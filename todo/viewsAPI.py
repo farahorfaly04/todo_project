@@ -9,7 +9,7 @@ from rest_framework import status
 from django.shortcuts import get_object_or_404
 from .models import Task
 from .forms import TaskForm
-from .serializers import UserSerializer
+from .serializers import TaskSerializer, UserSerializer
 from django.contrib.auth.models import User
 from django.forms.models import model_to_dict
 from django.core.exceptions import FieldError
@@ -25,16 +25,16 @@ class SignUpView(APIView):
         return Response({'success': False, 'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 class TaskListView(APIView):
+
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, payload):
-        filter_key = payload.data.get('key')
-        filter_value = payload.data.get('value')
-        tasks = Task.objects.filter(**{filter_key: filter_value}).values()
-
+        filter = payload.data.get('filters', {})
+        tasks = Task.objects.filter(**filter)
+        ser = TaskSerializer(tasks, many=True)
         return Response({
-            'tasks': tasks,
+            'tasks': ser.data,
         })
 
 class TaskEditView(APIView):
